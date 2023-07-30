@@ -43,14 +43,15 @@ EMPATHETIC_RESPONSES = {
 def on_message(message_history: List[Message], state: dict = None):
     if state is None or "counter" not in state:
         state = {"counter": 0}
-
-    # Check if this is the first user message (message_history is empty)
-    if len(message_history) == 0:
-        # Send the welcome message for the first interaction as a system message
-        bot_response = Message(content=DEFAULT_WELCOME_MESSAGE, role="assistant")
     else:
-        user_message = message_history[-1].content.lower()
+        state["counter"] += 1
 
+    user_message = message_history[-1].content.lower()
+
+    # Show default welcome message for the first interaction
+    if state["counter"] == 0:
+        bot_response = DEFAULT_WELCOME_MESSAGE
+    else:
         # Check for crisis keywords first
         if any(keyword in user_message for keyword in CRISIS_KEYWORDS):
             bot_response = "I'm really sorry to hear that you're feeling this way. Your safety is a top priority. Please consider reaching out to a mental health professional, a helpline, or a trusted person in your life for immediate support."
